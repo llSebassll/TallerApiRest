@@ -1,0 +1,39 @@
+version: '3'
+services:
+  restapi:
+    image: app
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: restapi
+    ports:
+      - "8081:8081"    
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: aplication  
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: test
+      PMA_PASSWORD: 12345
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    
+
+
